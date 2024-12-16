@@ -1,3 +1,6 @@
+<?php
+include 'PDO/PDO.php';
+?>
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -47,34 +50,18 @@
                     <label for="doctor">Select Doctor:</label>
                     <select id="doctor" name="d_no" required>
                         <option value="">Select Doctor</option>
-                        <?php
-                        try {
-                            $stmt = $pdo->prepare("SELECT 
-                                doc_no,
-                                name,
-                                spatiality,
-                                gender,
-                                expr_years,
-                                day_work
-                                FROM doctor_Info 
-                                WHERE active = 1 
-                                ORDER BY name ASC");
-                            $stmt->execute();
-                            
-                            while($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
-                                echo "<option value='" . htmlspecialchars($row['doc_no']) . "'>" 
-                                    . htmlspecialchars($row['name']) 
-                                    . " - " . htmlspecialchars($row['spatiality'])
-                                    . " (" . htmlspecialchars($row['gender']) . ")"
-                                    . " - " . htmlspecialchars($row['expr_years']) . " years experience"
-                                    . " - Working days: " . htmlspecialchars($row['day_work'])
-                                    . "</option>";
-                            }
-                        } catch(PDOException $e) {
-                            error_log("Database Error: " . $e->getMessage());
-                            echo "<option value=''>Error loading doctors. Please try again later.</option>";
-                        }
-                        ?>
+                        <?php 
+                        $doctors = getDoctors();
+                                if ($doctors) {
+                                    foreach($doctors as $doctor) {
+                                        echo "<option value='" . htmlspecialchars($doctor['id']) . "'>" 
+                                            . htmlspecialchars($doctor['name']) 
+                                            . "</option>";
+                                    }
+                                } else {
+                                    echo "<option value=''>Error loading doctors. Please try again later.</option>";
+                                }
+                                ?>
                     </select>
                 </div>
 
