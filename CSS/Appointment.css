@@ -12,56 +12,26 @@ body {
     padding: 40px 20px;
 }
 
+/* Main Container Styles */
 .appointment-container {
-    max-width: 900px;
-    margin: 20px auto;
+    max-width: 600px;
+    margin: 50px auto;
     padding: 30px;
-    background: white;
-    border-radius: 20px;
-    box-shadow: 0 15px 30px rgba(0, 0, 0, 0.1);
-}
-
-/* Header Styles */
-h2 {
-    text-align: center;
-    color: #2c3e50;
-    margin-bottom: 30px;
-    font-size: 2.2em;
-    position: relative;
-    padding-bottom: 10px;
-}
-
-h2::after {
-    content: '';
-    position: absolute;
-    bottom: 0;
-    left: 50%;
-    transform: translateX(-50%);
-    width: 100px;
-    height: 4px;
-    background: linear-gradient(to right, #007bff, #00d2ff);
-    border-radius: 2px;
-}
-
-/* Form Section Styles */
-.form-section {
-    margin-bottom: 30px;
-    padding: 25px;
-    background: #f8f9fa;
+    background: #ffffff;
     border-radius: 15px;
-    border: 1px solid #e9ecef;
-    transition: transform 0.3s ease;
+    box-shadow: 0 0 20px rgba(0, 0, 0, 0.1);
 }
 
-.form-section:hover {
-    transform: translateY(-5px);
-    box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+/* Auth Section Styles */
+.auth-section {
+    padding: 20px;
 }
 
-.form-section h3 {
-    color: #007bff;
-    margin-bottom: 20px;
-    font-size: 1.4em;
+.auth-section h2 {
+    color: #2c3e50;
+    text-align: center;
+    margin-bottom: 30px;
+    font-size: 28px;
 }
 
 /* Form Group Styles */
@@ -72,69 +42,108 @@ h2::after {
 .form-group label {
     display: block;
     margin-bottom: 8px;
-    font-weight: 600;
-    color: #2c3e50;
-    font-size: 0.95em;
+    color: #34495e;
+    font-weight: 500;
 }
 
 .form-group input,
 .form-group select {
     width: 100%;
-    padding: 12px 15px;
-    border: 2px solid #e9ecef;
+    padding: 12px;
+    border: 1px solid #ddd;
     border-radius: 8px;
-    font-size: 1em;
-    transition: all 0.3s ease;
-    background-color: white;
+    font-size: 16px;
+    transition: border-color 0.3s ease;
 }
 
 .form-group input:focus,
 .form-group select:focus {
-    border-color: #007bff;
+    border-color: #3498db;
     outline: none;
-    box-shadow: 0 0 0 3px rgba(0, 123, 255, 0.1);
+    box-shadow: 0 0 5px rgba(52, 152, 219, 0.3);
 }
 
-/* Submit Button Styles */
+/* Button Styles */
 .submit-btn {
-    background: linear-gradient(45deg, #007bff, #00d2ff);
+    width: 100%;
+    padding: 14px;
+    background-color: #3498db;
     color: white;
-    padding: 15px 30px;
     border: none;
     border-radius: 8px;
-    cursor: pointer;
-    width: 100%;
-    font-size: 1.1em;
+    font-size: 16px;
     font-weight: 600;
-    text-transform: uppercase;
-    letter-spacing: 1px;
-    transition: all 0.3s ease;
-    margin-top: 20px;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
 }
 
 .submit-btn:hover {
-    background: linear-gradient(45deg, #0056b3, #00a6cc);
-    transform: translateY(-2px);
-    box-shadow: 0 5px 15px rgba(0, 123, 255, 0.4);
+    background-color: #2980b9;
 }
 
-.submit-btn:active {
-    transform: translateY(0);
+/* Link Styles */
+.auth-section p {
+    text-align: center;
+    margin-top: 20px;
+}
+
+.auth-section a {
+    color: #3498db;
+    text-decoration: none;
+    font-weight: 500;
+    transition: color 0.3s ease;
+}
+
+.auth-section a:hover {
+    color: #2980b9;
+    text-decoration: underline;
 }
 
 /* Responsive Design */
 @media (max-width: 768px) {
     .appointment-container {
+        margin: 20px;
         padding: 20px;
     }
-    
-    .form-section {
-        padding: 20px;
+}
+
+/* Animation Effects */
+.auth-section {
+    animation: fadeIn 0.5s ease;
+}
+
+@keyframes fadeIn {
+    from {
+        opacity: 0;
+        transform: translateY(-10px);
     }
-    
-    h2 {
-        font-size: 1.8em;
+    to {
+        opacity: 1;
+        transform: translateY(0);
     }
+}
+
+/* Form Validation Styles */
+.form-group input:invalid {
+    border-color: #e74c3c;
+}
+
+.form-group input:valid {
+    border-color: #2ecc71;
+}
+
+/* Password Field Styles */
+input[type="password"] {
+    letter-spacing: 0.3em;
+}
+
+/* Custom Select Styles */
+select {
+    appearance: none;
+    background-image: url("data:image/svg+xml;charset=UTF-8,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='currentColor' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3e%3cpolyline points='6 9 12 15 18 9'%3e%3c/polyline%3e%3c/svg%3e");
+    background-repeat: no-repeat;
+    background-position: right 1rem center;
+    background-size: 1em;
 }
 
 /* Alert Messages */
@@ -196,23 +205,6 @@ h2::after {
 .doctor-info-card ul li strong {
     color: #495057;
     margin-right: 5px;
-}
-
-/* Enhanced Select Styling */
-.form-group select {
-    padding-right: 30px;
-    appearance: none;
-    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' fill='%23333' viewBox='0 0 16 16'%3E%3Cpath d='M8 11.5l-6-6h12z'/%3E%3C/svg%3E");
-    background-repeat: no-repeat;
-    background-position: right 10px center;
-}
-
-.form-group:hover {
-    border-color: #007bff;
-}
-
-.form-group select option {
-    padding: 10px;
 }
 
 /* Enhanced Doctor Details Styling */
