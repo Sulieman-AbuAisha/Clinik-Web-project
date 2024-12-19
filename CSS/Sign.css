@@ -1,3 +1,9 @@
+:root {
+    --primary-color: #0077b6;
+    --secondary-color: #48cae4;
+    --text-color: #333;
+    --light-bg: #f8f9fa;
+}
 /* Global Styles */
 * {
     margin: 0;
@@ -27,11 +33,55 @@ body {
     padding: 20px;
 }
 
-.auth-section h2 {
-    color: #2c3e50;
+.error{
+    color: red;
+    font-size: 14px;
+    margin: 20px;
+    
+}
+
+h2 {
     text-align: center;
-    margin-bottom: 30px;
-    font-size: 28px;
+    font-size: 2.5rem;
+    color: var(--primary-color);
+    margin: -1.5rem 0 2rem;
+    position: relative;
+    padding-bottom: 15px;
+}
+
+/* Add decorative underline */
+h2::after {
+    content: '';
+    position: absolute;
+    bottom: 0;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 80px;
+    height: 4px;
+    background: linear-gradient(to right, var(--primary-color), var(--secondary-color));
+    border-radius: 2px;
+}
+
+/* Add subtle animation on page load */
+h2 {
+    animation: slideIn 0.8s ease-out;
+}
+
+@keyframes slideIn {
+    from {
+        opacity: 0;
+        transform: translateY(20px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+/* Optional: Add hover effect */
+h2:hover::after {
+    width: 120px;
+    transition: width 0.3s ease;
 }
 
 /* Form Group Styles */
@@ -123,13 +173,8 @@ body {
     }
 }
 
-/* Form Validation Styles */
-.form-group input:invalid {
-    border-color: #e74c3c;
-}
-
 .form-group input:valid {
-    border-color: #2ecc71;
+    border-color: #22d8e1;
 }
 
 /* Password Field Styles */
