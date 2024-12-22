@@ -1,47 +1,23 @@
 <?php
 session_start();
-require_once '../PDO/PDO.php';
 require_once './ValidateMethod.php';
-require_once '../PDO/PDO_Sing.php';
+require_once './PDO_Sing.php';
 
 
 $errors = [];
-$showSignup = isset($_GET['signup']);
-  // Check if the user is already logged in with a valid session
-//   if(isset($_SESSION['username'])){
-//       echo "you are logged in " . $_SESSION['username'];
-//       return;
-//   }
+$showSignup = isset($_GET['signup']) || isset($_POST['submitSignup']);
+var_dump($_SERVER["REQUEST_METHOD"]);
+var_dump($_POST);
+
 
 if($_SERVER['REQUEST_METHOD'] == 'POST') {
-    //signup
-    if(!isset($showSignup))
-    {
-        if(!validateSignup($_POST, $errors)) {
-            header('Location: Sign.php?signup=1');
-            exit();
-        }
-        else
-        {
-            $_SESSION['username'] = $username;
-            $_SESSION['password'] = $password;
-            //send the user to the appointment page
-        }
+    // Handle Signup
+    if(isset($_POST['submitSignup'])) {
+        handleSignup($_POST, $errors);
     }
-    //Login
-    else {
-        if(!LoginAdmin($_POST['username'], $_POST["password"])) {
-            $_SESSION['loginError'] = "Invalid username or password";
-            header('Location: Sign.php');
-            exit();                     
-        }
-        else {
-            $_SESSION['username'] = $_POST['username'];
-            $_SESSION['password'] = $_POST["password"];
-            unset($_SESSION['loginError']); // Clear any previous errors
-            header('Location: ../Test.php');
-            exit();
-        }
+    // Handle Login 
+    else if(isset($_POST['submitLogin'])) {
+        handleLogin($_POST);
     }
 }
 ?>
@@ -55,73 +31,100 @@ if($_SERVER['REQUEST_METHOD'] == 'POST') {
     <link rel="stylesheet" href="../CSS/Sign.css?v=<?php echo time(); ?>">
 </head>
 <body>
-    <div class="appointment-container">
-        <!-- Login Form -->
-        <div class="auth-section" <?php if($showSignup) echo 'style="display:none;"'; ?>>
+    <div class="login Sign-container" <?php if($showSignup) echo 'style="display:none;"'; ?>>
+            <!-- Login Form -->
+        <div class="auth-section" >
             <h2>Patient Login</h2>
-            <form action="./Sign.php" method="POST" id="loginForm">
+            <form action="Sign.php" method="POST" id="loginForm">
                 <div class="form-group">
                     <label for="login-username">Username:</label>
-                    <input type="text" id="login-username" name="username" required>
+                    <input type="text" id="login-username" name="username">
                 </div> 
                 <div class="form-group">
                     <label for="login-password">Password:</label>
-                    <input type="password" id="login-password" name="password" required>
+                    <input type="password" id="login-password" name="password">
                 </div>
                 <?php if(isset($_SESSION['loginError'])): ?>
                     <p class='error'>Invalid username or password</p>
                     <?php unset($_SESSION['loginError']); ?>    
                 <?php endif; ?>           
-                <button type="submit" class="submit-btn" name="submit">Login</button>
+                <button type="submit" class="submit-btn" name="submitLogin">Login</button>
                 <p>Don't have an account? <a href="?signup=1">Sign Up</a></p>
             </form>
         </div>
+    </div>
 
+    <div class="Signup Sign-container" <?php if(!$showSignup) echo 'style="display:none;"'; ?>>
         <!-- Sign Up Form -->
-        <div class="auth-section" <?php if(!$showSignup) echo 'style="display:none;"'; ?>>
+        <div class="auth-section" >
             <h2>Patient Registration</h2>
-            <form action="./Sign.php" method="POST" id="signupForm">
-                <div class="form-group">
-                    <label for="username">Username:</label>
-                    <input type="text" id="username" name="username" require value="<?php isset($_SESSION['form_data']["username"])? htmlspecialchars($_SESSION['form_data']["username"]): '';?>">
-                    <?php  if(isset($_SESSION['signup_errors']['username']))  echo "<span class='error'>". $_SESSION['signup_errors']['username'] ."</span>" ?>
+            <form action="Sign.php?signup=1" method="POST" id="signupForm">
+                <div class="form-row">
+                    <div class="form-group">
+                        <label for="username">Username:</label>
+                        <input type="text" id="username" name="username" value="<?php echo isset($_POST["username"]) ? htmlspecialchars($_POST["username"]) : ''; ?>">
+                        <?php if(isset($_SESSION['signup_errors']['username'])) echo "<span class='error'>". $_SESSION['signup_errors']['username'] ."</span>" ?>
+                    </div>
+                    <div class="form-group">
+                        <label for="name">Full Name:</label>
+                        <input type="text" id="name" name="name" value="<?php echo isset($_POST['name']) ? htmlspecialchars($_POST['name']) : ''; ?>">
+                        <?php if(isset($_SESSION['signup_errors']['name'])) echo "<span class='error'>". $_SESSION['signup_errors']['name'] ."</span>" ?>
+                    </div>
                 </div>
-                <div class="form-group">
-                    <label for="name">Full Name:</label>
-                    <input type="text" id="name" name="name" required value="<?php echo isset($_SESSION['form_data']['name']) ? htmlspecialchars($_SESSION['form_data']['name']) : ''; ?>">
-                    <?php if(isset($_SESSION['signup_errors']['name'])) echo "<span class='error'>". $_SESSION['signup_errors']['name'] ."</span>" ?>
+                <div class="form-row">
+                    <div class="form-group">
+                        <label for="gender">Gender:</label>
+                        <select id="gender" name="gender" >
+                            <option value="" >Select Gender</option>
+                            <option value="male" <?php echo isset($_POST['gender']) && $_POST['gender'] == 'male' ? 'selected' : ''; ?>>Male</option>
+                            <option value="female" <?php echo isset($_POST['gender']) && $_POST['gender'] == 'female' ? 'selected' : ''; ?>>Female</option>
+                        </select>
+                        <?php if(isset($_SESSION['signup_errors']['gender'])) echo "<span class='error'>". $_SESSION['signup_errors']['gender'] ."</span>" ?>
+                    </div>
+                    <div class="form-group">
+                        <label for="nationality">Nationality:</label>
+                        <select id="nationality" name="nationality" >
+                            <option value="" ></option>
+                            <option value="Libya" <?php echo isset($_POST['nationality']) && $_POST['nationality'] == 'Libya' ? 'selected' : ''; ?>>Libya</option>
+                            <option value="Tunisia" <?php echo isset($_POST['nationality']) && $_POST['nationality'] == 'Tunisia' ? 'selected' : ''; ?>>Tunisia</option>
+                            <option value="Morocco" <?php echo isset($_POST['nationality']) && $_POST['nationality'] == 'Morocco' ? 'selected' : ''; ?>>Morocco</option>
+                            <option value="Algeria" <?php echo isset($_POST['nationality']) && $_POST['nationality'] == 'Algeria' ? 'selected' : ''; ?>>Algeria</option>
+                            <option value="Egypt" <?php echo isset($_POST['nationality']) && $_POST['nationality'] == 'Egypt' ? 'selected' : ''; ?>>Egypt</option>          
+                        </select>
+                        <?php if(isset($_SESSION['signup_errors']['nationality'])) echo "<span class='error'>". $_SESSION['signup_errors']['nationality'] ."</span>" ?>
+                    </div>
                 </div>
-                <div class="form-group">
-                    <label for="gender">Gender:</label>
-                    <select id="gender" name="gender" required>
-                        <option value="">Select Gender</option>
-                        <option value="male">Male</option>
-                        <option value="female">Female</option>
-                        <option value="other">Other</option>
-                    </select>
+                <div class="form-row">
+                    <div class="form-group">
+                        <label for="tel">Phone Number:</label>
+                        <input type="tel" id="tel" name="tel"  placeholder="0931234567"
+                         value="<?php echo isset($_POST['tel']) ? htmlspecialchars($_POST['tel']) : ''; ?>">
+                        <?php if(isset($_SESSION['signup_errors']['tel'])) echo "<span class='error'>". $_SESSION['signup_errors']['tel'] ."</span>" ?>
+                    </div>
+                    <div class="form-group">
+                        <label for="email">Email:</label>
+                        <input type="email" id="email" name="email" 
+                        value="<?php echo isset($_POST['email']) ? htmlspecialchars($_POST['email']) : ''; ?>">
+                        <?php if(isset($_SESSION['signup_errors']['email'])) echo "<span class='error'>". $_SESSION['signup_errors']['email'] ."</span>" ?>
+                    </div>
                 </div>
-                <div class="form-group">
-                    <label for="nationality">Nationality:</label>
-                    <input type="text" id="nationality" name="nationality" required>
+                <div class="form-row">
+                    <div class="form-group">
+                        <label for="password">Password:</label>
+                        <input type="password" id="password" name="password">
+                        <?php if(isset($_SESSION['signup_errors']['password'])) echo "<span class='error'>". $_SESSION['signup_errors']['password'] ."</span>" ?>
+                    </div>
+                    <div class="form-group">
+                        <label for="confirm-password">Confirm Password:</label>
+                        <input type="password" id="confirm-password" name="confirm-password" >
+                        <?php if(isset($_SESSION['signup_errors']['confirm-password'])) echo "<span class='error'>". $_SESSION['signup_errors']['confirm-password'] ."</span>" ?>
+                    </div>
                 </div>
-                <div class="form-group">
-                    <label for="tel">Phone Number:</label>
-                    <input type="tel" id="tel" name="tel" required placeholder="e.g., +1-234-567-8900">
+                    <span class="error" style="display: block;" ><?php if(isset($_SESSION['signup_errors']['general'])) echo $_SESSION['signup_errors']['general']; ?></span>
+                    <span class="success" style="display: block;" ><?php if(isset($_SESSION['success'])) echo $_SESSION['success']; ?></span>
+                    <button type="submit" class="submit-btn" name="submitSignup">Sign Up</button>
+                    <p>Already have an account? <a href="?">Login</a></p>
                 </div>
-                <div class="form-group">
-                    <label for="email">Email:</label>
-                    <input type="email" id="email" name="email" required>
-                </div>
-                <div class="form-group">
-                    <label for="password">Password:</label>
-                    <input type="password" id="password" name="password" required>
-                </div>
-                <div class="form-group">
-                    <label for="confirm-password">Confirm Password:</label>
-                    <input type="password" id="confirm-password" name="confirm-password" required>
-                </div>
-                <button type="submit" class="submit-btn">Sign Up</button>
-                <p>Already have an account? <a href="?">Login</a></p>
             </form>
         </div>
     </div>
