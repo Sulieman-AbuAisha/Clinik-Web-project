@@ -10,21 +10,34 @@
         {
             $Error['name'] = "Full name must contain first and last name";
         }
-    
+
+        // Add gender validation
+        if(empty($data["gender"]))
+        {
+            $Error['gender'] = "Please select a gender";
+        }
+
+        // Add nationality validation
+        if(empty($data["nationality"]))
+        {
+            $Error['nationality'] = "Please enter a valid nationality";
+        }
+
         if(!filter_var($data["email"], FILTER_VALIDATE_EMAIL))
         {
             $Error['email'] = "Invalid email format";
         }
-    
+        
+        if($data["password"] !== $data["confirm-password"])
+        {
+            $Error['password'] = "Passwords do not match";
+        }
+
         if(!preg_match("/^\+[0-9]{1,3}-[0-9]{3}-[0-9]{3}-[0-9]{4}$/", $data["tel"]))
         {
             $Error['tel'] = "Phone number must be in format: +XXX-XXX-XXX-XXXX";
         }
     
-        if($data["password"] !== $data["confirm-password"])
-        {
-            $Error['password'] = "Passwords do not match";
-        }
     
         return empty($Error);
     }
