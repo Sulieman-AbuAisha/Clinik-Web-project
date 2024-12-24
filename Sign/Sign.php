@@ -3,21 +3,26 @@ session_start();
 require_once './ValidateMethod.php';
 require_once './PDO_Sing.php';
 
-
 $errors = [];
 $showSignup = isset($_GET['signup']) || isset($_POST['submitSignup']);
 var_dump($_SERVER["REQUEST_METHOD"]);
-var_dump($_POST);
+
+if($_SERVER['REQUEST_METHOD'] == 'GET') {
+    $_SESSION['priv'] = $_GET['priv'];
+}
+var_dump($_SESSION);
 
 
 if($_SERVER['REQUEST_METHOD'] == 'POST') {
     // Handle Signup
     if(isset($_POST['submitSignup'])) {
+        var_dump($_SESSION);
         handleSignup($_POST, $errors);
     }
     // Handle Login 
     else if(isset($_POST['submitLogin'])) {
-        handleLogin($_POST);
+        var_dump($_SESSION);
+        handleLogin($_POST, $_SESSION['priv']);
     }
 }
 ?>

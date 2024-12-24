@@ -1,0 +1,79 @@
+<?php
+require_once('../PDO/PDO.php');
+session_start();
+
+// Get all doctors
+function getAllDoctors() {
+   try {
+        global $pdo;
+       $stmt = $pdo->prepare("SELECT * FROM doctor_info ORDER BY doc_no");
+       $stmt->execute();
+       return $stmt->fetchAll(PDO::FETCH_ASSOC);
+   } catch(PDOException $e) {
+       return false;
+   }
+}
+
+// Add new doctor
+function addDoctor($data) {
+   try {
+    global $pdo;
+       $stmt = $pdo->prepare("INSERT INTO doc_info (name, spatiality, expr_years, gender, 
+                             nationality, email, day_work) 
+                             VALUES (:name, :spatiality, :expr_years, :gender, 
+                             :nationality, :email, :day_work)");
+       
+       return $stmt->execute([
+           ':name' => $data['name'],
+           ':spatiality' => $data['spatiality'],
+           ':expr_years' => $data['expr_years'],
+           ':gender' => $data['gender'],
+           ':nationality' => $data['nationality'],
+           ':email' => $data['email'],
+           ':day_work' => implode(',', $data['day_work'])
+       ]);
+   } catch(PDOException $e) {
+       return false;
+   }
+}
+
+// Update doctor
+function updateDoctor($data) {
+   try {
+    global $pdo;
+       $stmt = $pdo->prepare("UPDATE doc_info SET 
+                             name = :name,
+                             spatiality = :spatiality,
+                             expr_years = :expr_years,
+                             gender = :gender,
+                             nationality = :nationality,
+                             email = :email,
+                             day_work = :day_work
+                             WHERE doc_no = :doc_no");
+       
+       return $stmt->execute([
+           ':doc_no' => $data['doc_no'],
+           ':name' => $data['name'],
+           ':spatiality' => $data['spatiality'],
+           ':expr_years' => $data['expr_years'],
+           ':gender' => $data['gender'],
+           ':nationality' => $data['nationality'],
+           ':email' => $data['email'],
+           ':day_work' => implode(',', $data['day_work'])
+       ]);
+   } catch(PDOException $e) {
+       return false;
+   }
+}
+
+// Delete doctor
+function deleteDoctor($doc_no) {
+   try {
+        global $pdo;
+       $stmt = $pdo->prepare("DELETE FROM doc_info WHERE doc_no = :doc_no");
+       return $stmt->execute([':doc_no' => $doc_no]);
+   } catch(PDOException $e) {
+       return false;
+   }
+}
+

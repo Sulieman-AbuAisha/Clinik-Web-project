@@ -1,14 +1,15 @@
 <?php
     require_once '../PDO/PDO.PHP';
 
-function Login($username, $password) {
+function Login($username, $password, $priv) {
     global $pdo;
     try{
-        $sql = "select * from users where u_name = :username and password = :password";
+        $sql = "select * from users where u_name = :username and password = :password and Priv = :priv";
         $stmt = $pdo->prepare($sql);
 
         $stmt->bindParam(':username', $username);
         $stmt->bindParam(':password', $password);
+        $stmt->bindParam(':priv', $priv);
 
         $stmt->execute();
         $user = $stmt->fetch(PDO::FETCH_ASSOC);
@@ -17,21 +18,20 @@ function Login($username, $password) {
         
         var_dump($_SESSION);
 
-        return isset($user);
+        return $user;
     }
     catch(PDOException $e){
         error_log("Database Error: " . $e->getMessage());
     }
 }
 
-
 function insertSignup($data){
     global $pdo;
     try {
-        $sql = "INSERT INTO user (UserName, Password, Priv) VALUES (:username, :password, 2)";
+        $sql = "INSERT INTO users (u_name, password, Priv) VALUES (:username, :password, '2')";
         $stmt = $pdo->prepare($sql);
-        $stmt->bindParam(":username", $UserName);
-        $stmt->bindParam(":password", $password);
+        $stmt->bindParam(":username", $data['username']);
+        $stmt->bindParam(":password", $data['password']);
 
         $stmt->execute();
         $stmt->fetch();
@@ -39,19 +39,17 @@ function insertSignup($data){
         $last_inserted_id = $pdo->lastInsertId();
 
 
-        $sql = "INSERT INTO users (U_no, u_name, fullname, gender, nationality, phone, email, password, priv) 
-                VALUES (:username, :name, :gender, :nationality, :phone, :email, :password, '2')";
+        $sql = "INSERT INTO patient_info (U_no, name, gender, nationality, tel, email) 
+                VALUES (:U_No, :name, :gender, :nationality, :tel, :email)";
         
         $stmt = $pdo->prepare($sql);
         
         $stmt->bindParam(':U_No', $last_inserted_id);
-        $stmt->bindParam(':username', $data['username']);
         $stmt->bindParam(':name', $data['name']);
         $stmt->bindParam(':gender', $data['gender']);
         $stmt->bindParam(':nationality', $data['nationality']);
-        $stmt->bindParam(':phone', $data['tel']);
+        $stmt->bindParam(':tel', $data['tel']);
         $stmt->bindParam(':email', $data['email']);
-        $stmt->bindParam(':password', $data['password']);
         
         return $stmt->execute();
         

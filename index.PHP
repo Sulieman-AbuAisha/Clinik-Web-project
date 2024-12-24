@@ -1,5 +1,7 @@
-<?php        
+<?php      
+require_once "./PDO/PDO.PHP";  
     session_start();
+    session_destroy();
     var_dump($_SESSION);
 ?>
 
@@ -12,7 +14,6 @@
     <title>HealthCare Clinic</title>
     <link rel="stylesheet" href="CSS/styles.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
-
 </head>
 <body>
     <nav>
@@ -22,8 +23,8 @@
         </div>
         <ul>
             <li><a href="#home">Home</a></li>
-            <li><a href="#doctors">Our Doctors</a></li>
-            <li><a href=" <?php echo isset($_SESSION['user'])? "./Appointment.php" : "Sign/Sign.php" ?>" >Appointments</a></li>
+            <li><a style="" href="<?php echo (IsAdmin() === true? "/Admin/Doctor.php" : "Sign/Sign.php?priv=1")?>" >Admin</a></li>
+            <li><a href=" <?php echo (IsUser() === true? "/Appointment/schedule.php" : "Sign/Sign.php?priv=2") ?>" >Appointments</a></li>
         </ul>
     </nav>
 
@@ -31,7 +32,7 @@
         <div class="hero-content">
             <h1>Your Health Is Our Priority</h1>
             <p>Professional healthcare services with experienced doctors</p>
-            <a href=" <?php echo isset($_SESSION['user'])? "./Appointment.php" : "Sign/Sign.php" ?>"  class="appointment-btn">Book Appointment</a>
+            <a href=" <?php echo (isset($_SESSION['user']) && $_SESSION['user'] != false && $_SESSION['user']['priv'] == 2)? "./Appointment/schedule.php" : "Sign/Sign.php?priv=2" ?>"  class="appointment-btn">Book Appointment</a>
         </div>
         <div class="doctor-image">
             <div class="icon top-left">
@@ -48,7 +49,6 @@
                 <img src="pic/schedule-icon.png" alt="Schedule Icon" />
             </div>
         </div>
-        
     </header>
 
     <section id="services">

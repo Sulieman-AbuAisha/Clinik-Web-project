@@ -11,29 +11,28 @@
   $pdo = new PDO($dsn, $user, $password);
   $pdo->setAttribute(PDO::ATTR_DEFAULT_FETCH_MODE, PDO::FETCH_OBJ);
 
-
-function getDoctors() {
-    global $pdo;
-    try {
-        $stmt = $pdo->prepare("SELECT doc_no, name FROM doctor_Info ORDER BY name ASC");
-        $stmt->execute();
-        
-        $doctors = [];
-        while($row = $stmt->fetch(PDO::FETCH_ASSOC)) {
-            $doctors[] = [
-                'id' => $row['doc_no'],
-                'name' => $row['name']
-            ];
-            foreach($doctors as $doctor){
-                echo $doctor['name'] . '<br>';
-              }
-        }
-        return $doctors;
-        
-    } catch(PDOException $e) {
-        error_log("Database Error: " . $e->getMessage());
-        return false;
+  function IsAdmin(){
+    if (isset($_SESSION['user']))
+    {
+      if($_SESSION['user'] != false)
+        return $_SESSION['user']['priv'] == 1;
     }
-}
+    return false;
+  }
 
+  function IsUser(){
+    if (isset($_SESSION['user']))
+    {
+      if($_SESSION['user'] != false)
+        return $_SESSION['user']['priv'] == 2;
+    }
+    return false;
+  }
+
+// function checkAdminPrivileges() {
+//     if (!isset($_SESSION['user']) || $_SESSION['priv'] != 1) {
+//         header("Location: ../Sign/Sing.php");
+//         exit();
+//     }
+// }
 ?>

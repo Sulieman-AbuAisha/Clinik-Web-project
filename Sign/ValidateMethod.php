@@ -74,15 +74,17 @@
             $_SESSION['signup_errors']['general'] = "Error creating account";
             return false;
         }
-        
     }
     
-    function handleLogin($postData) {
-        if(!Login($postData['username'], $postData['password'])) {
-            $_SESSION['loginError'] = "Invalid username or password";
-            header('Location: Sign.php');
+    function handleLogin($postData, $priv) {
+        if(Login($postData['username'], $postData['password'], $priv)) {
+            if($priv == 1)
+                header('Location: ../Admin/Doctor.php');
+            else
+                header('Location: ../Appointment/schedule.php');
         } else {
-            header('Location: ../Appointment.php');
+            $_SESSION['loginError'] = "Invalid username or password";
+            return false;
         }
     }
 ?>
