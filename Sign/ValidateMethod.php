@@ -1,6 +1,6 @@
 <?php
     function validateSignup($data, &$Error)   {
-        if(!preg_match("/^[A-Z][a-zA-Z]{7}$/", $data["username"]))
+        if(!preg_match("/^[A-Z][a-zA-Z]{7}$/", $data["username"])) 
         {
             $Error['username'] = "Username must start with capital letter and be 8 characters long";
         }
@@ -12,7 +12,7 @@
 
         // Add gender validation
         if(empty($data["gender"]))
-        {
+        { 
             $Error['gender'] = "Please select a gender";
         }
 
@@ -79,8 +79,8 @@
     function handleLogin($postData, $priv) {
         if(Login($postData['username'], $postData['password'], $priv)) {
             if($priv == 1)
-                header('Location: ../Admin/Doctor.php');
-            else
+                header('Location: ../Admin/admin.php');
+            else if($priv == 2)
                 header('Location: ../Appointment/schedule.php');
         } else {
             $_SESSION['loginError'] = "Invalid username or password";

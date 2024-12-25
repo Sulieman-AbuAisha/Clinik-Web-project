@@ -1,8 +1,8 @@
 <?php      
-require_once "./PDO/PDO.PHP";  
+require_once "PDO/PDO.PHP";  
     session_start();
     session_destroy();
-    var_dump($_SESSION);
+    //var_dump($_SESSION); 
 ?>
 
 
@@ -23,8 +23,8 @@ require_once "./PDO/PDO.PHP";
         </div>
         <ul>
             <li><a href="#home">Home</a></li>
-            <li><a style="" href="<?php echo (IsAdmin() === true? "/Admin/Doctor.php" : "Sign/Sign.php?priv=1")?>" >Admin</a></li>
-            <li><a href=" <?php echo (IsUser() === true? "/Appointment/schedule.php" : "Sign/Sign.php?priv=2") ?>" >Appointments</a></li>
+            <li><a style="" href="<?php echo (IsAdmin() === true? "Admin/admin.php" : "Sign/Sign.php?priv=1")?>" >Admin</a></li>
+            <li><a href=" <?php echo (IsUser() === true? "Appointment/schedule.php" : "Sign/Sign.php?priv=2") ?>" >Appointments</a></li>
         </ul>
     </nav>
 

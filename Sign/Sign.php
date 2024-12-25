@@ -1,28 +1,31 @@
 <?php
 session_start();
-require_once './ValidateMethod.php';
-require_once './PDO_Sing.php';
+require_once 'ValidateMethod.php'; 
+require_once 'PDO_Sing.php';
 
 $errors = [];
 $showSignup = isset($_GET['signup']) || isset($_POST['submitSignup']);
-var_dump($_SERVER["REQUEST_METHOD"]);
+//var_dump($_SERVER["REQUEST_METHOD"]);
 
 if($_SERVER['REQUEST_METHOD'] == 'GET') {
-    $_SESSION['priv'] = $_GET['priv'];
+    if(isset($_GET['priv'])) {
+        $_SESSION['priv'] = $_GET['priv'];
+    }
 }
-var_dump($_SESSION);
+//var_dump($_SESSION);
 
 
 if($_SERVER['REQUEST_METHOD'] == 'POST') {
     // Handle Signup
     if(isset($_POST['submitSignup'])) {
-        var_dump($_SESSION);
+       // var_dump($_SESSION);
         handleSignup($_POST, $errors);
     }
     // Handle Login 
     else if(isset($_POST['submitLogin'])) {
-        var_dump($_SESSION);
-        handleLogin($_POST, $_SESSION['priv']);
+       // var_dump($_SESSION);
+        $privilege = isset($_SESSION['priv']) ? $_SESSION['priv'] : '';
+        handleLogin($_POST, $privilege);
     }
 }
 ?>
@@ -39,7 +42,7 @@ if($_SERVER['REQUEST_METHOD'] == 'POST') {
     <div class="login Sign-container" <?php if($showSignup) echo 'style="display:none;"'; ?>>
             <!-- Login Form -->
         <div class="auth-section" >
-            <h2>Patient Login</h2>
+            <h2>Login</h2>
             <form action="Sign.php" method="POST" id="loginForm">
                 <div class="form-group">
                     <label for="login-username">Username:</label>

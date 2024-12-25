@@ -1,8 +1,8 @@
 <?php
   $host =  'localhost';
-  $user = 'root';
+  $user = 'root'; 
   $password = '';
-  $dbname = 'Clinic';
+  $dbname = 'clinic';
 
   // Set DSN
   $dsn = 'mysql:host='. $host .';dbname='. $dbname;
