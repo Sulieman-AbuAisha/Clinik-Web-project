@@ -38,7 +38,7 @@
         <nav class="appointment-nav">
             <ul>
                 <li><a href="schedule.php" class="nav-link">Schedule Appointment</a></li>
-                <li><a href="myappointments.php" class="nav-link active">My Appointments</a></li>
+                <li><a href="MyAppointments.php" class="nav-link active">My Appointments</a></li>
             </ul>
         </nav>
     </div>

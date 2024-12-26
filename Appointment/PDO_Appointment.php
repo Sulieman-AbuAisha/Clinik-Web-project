@@ -55,7 +55,7 @@
    
     }
 
-function isDoctorFreeinDate($doctor_select, $appointmentDate) {
+    function isDoctorFreeinDate($doctor_select, $appointmentDate) { 
     try {
         global $pdo;
         $sql = "SELECT COUNT(*) as appointment_count FROM doctor_info 
@@ -76,7 +76,7 @@ function isDoctorFreeinDate($doctor_select, $appointmentDate) {
         error_log("Database Error: " . $e->getMessage());
         return false;
     }
-}
+    }   
 
     function insertAppointment($data){
         try{
@@ -95,5 +95,47 @@ function isDoctorFreeinDate($doctor_select, $appointmentDate) {
             var_dump($_SESSION);
             return false;
         }
+    }
+
+    function getPatientAppointments($user_id)    {
+        global $pdo;
+        try{
+            $sql = "SELECT * FROM doctor_info INNER join resv_info on resv_info.d_no = doctor_info.doc_no
+                where  u_no = :user_id";
+            $stmt = $pdo->prepare($sql);
+            $stmt->bindParam(':user_id', $user_id);
+            $stmt->execute();
+            $appointments = $stmt->fetchAll(PDO::FETCH_ASSOC);
+
+            return $appointments;
+        }
+        catch(PDOException $e){
+            error_log("Database Error: " . $e->getMessage());
+            return false;
+        }
+        
+    }
+
+    function cancelAppointment($appointment_id, $user_id) {
+        global $pdo;
+        try {
+            $sql =  "UPDATE resv_info  SET Type = 'Cancelled' 
+            WHERE r_no = :r_no";
+    
+            $stmt = $pdo->prepare($sql);
+            $stmt->bindParam(':r_no', $appointment_id);
+            $result = $stmt->execute();
+
+            if ($result) {
+                $_SESSION['message'] = 'Appointment cancelled successfully';
+            } else {
+                $_SESSION['error'] = 'Failed to cancel appointment';
+            }
+        } 
+        catch(PDOException $e) {
+            $_SESSION['error'] = 'Database error: ' . $e->getMessage();
+            return false;
+        }
+
     }
 ?>

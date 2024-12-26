@@ -1,8 +1,9 @@
 <?php
+require_once 'PDO_Sing.php';
     function validateSignup($data, &$Error)   {
-        if(!preg_match("/^[A-Z][a-zA-Z]{7}$/", $data["username"])) 
+        if(!preg_match("/^[A-Z][a-zA-Z]{4}$/", $data["username"])) 
         {
-            $Error['username'] = "Username must start with capital letter and be 8 characters long";
+            $Error['username'] = "Username must start with capital letter and be 5 characters long";
         }
 
         if(!preg_match("/^[a-zA-Z]+\s[a-zA-Z]+$/", $data["name"]))
@@ -52,7 +53,10 @@
             $Error['confirm-password'] = "Please confirm your password";
         }
 
-    
+        if(IsUsernameTaken($data["username"]))
+        {
+            $Error['username'] = "Username already taken";
+        }
     
         return empty($Error);
     }
@@ -63,12 +67,14 @@
             // header('Location: Sign.php?signup=1');
             return false;
         }
-        var_dump($_SESSION['signup_errors']);
         
         
         if(insertSignup($postData)) {
             $_SESSION['signup_errors'] = "";
             $_SESSION['success'] = "Account created successfully!";
+            $_SESSION['user'] = Login($postData['username'], $postData['password'], 2);
+            
+            header('Location: ../Appointment/schedule.php');
             // header('Location: Sign.php');
         } else {
             $_SESSION['signup_errors']['general'] = "Error creating account";
@@ -88,3 +94,4 @@
         }
     }
 ?>
+

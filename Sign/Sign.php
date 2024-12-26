@@ -2,16 +2,17 @@
 session_start();
 require_once 'ValidateMethod.php'; 
 require_once 'PDO_Sing.php';
-
 $errors = [];
+
 $showSignup = isset($_GET['signup']) || isset($_POST['submitSignup']);
 //var_dump($_SERVER["REQUEST_METHOD"]);
 
-if($_SERVER['REQUEST_METHOD'] == 'GET') {
+if($_SERVER['REQUEST_METHOD'] === 'GET') {
     if(isset($_GET['priv'])) {
         $_SESSION['priv'] = $_GET['priv'];
     }
 }
+var_dump($_SESSION);
 //var_dump($_SESSION);
 
 
@@ -37,6 +38,7 @@ if($_SERVER['REQUEST_METHOD'] == 'POST') {
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Patient Portal</title>
     <link rel="stylesheet" href="../CSS/Sign.css?v=<?php echo time(); ?>">
+    <script src="./validation.js"></script>
 </head>
 <body>
     <div class="login Sign-container" <?php if($showSignup) echo 'style="display:none;"'; ?>>
@@ -57,7 +59,7 @@ if($_SERVER['REQUEST_METHOD'] == 'POST') {
                     <?php unset($_SESSION['loginError']); ?>    
                 <?php endif; ?>           
                 <button type="submit" class="submit-btn" name="submitLogin">Login</button>
-                <p>Don't have an account? <a href="?signup=1">Sign Up</a></p>
+                <p <?php echo $_SESSION['priv'] === '1' ? 'style="display:none;"' : '' ?>>Don't have an account? <a href="?signup=1">Sign Up</a></p>
             </form>
         </div>
     </div>
@@ -66,17 +68,20 @@ if($_SERVER['REQUEST_METHOD'] == 'POST') {
         <!-- Sign Up Form -->
         <div class="auth-section" >
             <h2>Patient Registration</h2>
-            <form action="Sign.php?signup=1" method="POST" id="signupForm">
+            <form action="Sign.php?signup=1" method="POST" id="signupForm" onsubmit="return validate()">
                 <div class="form-row">
                     <div class="form-group">
                         <label for="username">Username:</label>
                         <input type="text" id="username" name="username" value="<?php echo isset($_POST["username"]) ? htmlspecialchars($_POST["username"]) : ''; ?>">
                         <?php if(isset($_SESSION['signup_errors']['username'])) echo "<span class='error'>". $_SESSION['signup_errors']['username'] ."</span>" ?>
+                        <span id="username_error" class="error"></span>
                     </div>
                     <div class="form-group">
                         <label for="name">Full Name:</label>
                         <input type="text" id="name" name="name" value="<?php echo isset($_POST['name']) ? htmlspecialchars($_POST['name']) : ''; ?>">
                         <?php if(isset($_SESSION['signup_errors']['name'])) echo "<span class='error'>". $_SESSION['signup_errors']['name'] ."</span>" ?>
+                        <span id="name_error" class="error"></span>
+
                     </div>
                 </div>
                 <div class="form-row">
@@ -100,6 +105,8 @@ if($_SERVER['REQUEST_METHOD'] == 'POST') {
                             <option value="Egypt" <?php echo isset($_POST['nationality']) && $_POST['nationality'] == 'Egypt' ? 'selected' : ''; ?>>Egypt</option>          
                         </select>
                         <?php if(isset($_SESSION['signup_errors']['nationality'])) echo "<span class='error'>". $_SESSION['signup_errors']['nationality'] ."</span>" ?>
+                        <span id="nationality_error" class="error"></span>
+
                     </div>
                 </div>
                 <div class="form-row">
@@ -108,12 +115,15 @@ if($_SERVER['REQUEST_METHOD'] == 'POST') {
                         <input type="tel" id="tel" name="tel"  placeholder="0931234567"
                          value="<?php echo isset($_POST['tel']) ? htmlspecialchars($_POST['tel']) : ''; ?>">
                         <?php if(isset($_SESSION['signup_errors']['tel'])) echo "<span class='error'>". $_SESSION['signup_errors']['tel'] ."</span>" ?>
+                        <span id="tel_error" class="error"></span>
+
                     </div>
                     <div class="form-group">
                         <label for="email">Email:</label>
                         <input type="email" id="email" name="email" 
                         value="<?php echo isset($_POST['email']) ? htmlspecialchars($_POST['email']) : ''; ?>">
                         <?php if(isset($_SESSION['signup_errors']['email'])) echo "<span class='error'>". $_SESSION['signup_errors']['email'] ."</span>" ?>
+                        <span id="email_error" class="error"></span>
                     </div>
                 </div>
                 <div class="form-row">
@@ -121,6 +131,7 @@ if($_SERVER['REQUEST_METHOD'] == 'POST') {
                         <label for="password">Password:</label>
                         <input type="password" id="password" name="password">
                         <?php if(isset($_SESSION['signup_errors']['password'])) echo "<span class='error'>". $_SESSION['signup_errors']['password'] ."</span>" ?>
+                        <span id="password_error" class="error"></span>
                     </div>
                     <div class="form-group">
                         <label for="confirm-password">Confirm Password:</label>

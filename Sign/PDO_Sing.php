@@ -57,4 +57,20 @@ function insertSignup($data){
         return false;
     }
 }
+
+function IsUsernameTaken($username) {
+    global $pdo;
+    try {
+        $sql = "SELECT * FROM users WHERE u_name = :username";
+        $stmt = $pdo->prepare($sql);
+        $stmt->bindParam(':username', $username);
+        $stmt->execute();
+        return $stmt->rowCount() > 0;
+    } 
+    catch(PDOException $e) 
+    {
+        error_log("Database Error: " . $e->getMessage());
+        return false;
+    }
+}
 ?>
