@@ -9,4 +9,4 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['appointment_id'])) {
     cancelAppointment($appointment_id, $user_id);
 }
 header('Location: MyAppointments.php');
-exit();
+exit(); 

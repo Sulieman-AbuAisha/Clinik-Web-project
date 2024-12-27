@@ -3,14 +3,14 @@
     require_once "./Method.php";    
     session_start();
 
-    var_dump($_SESSION);
+
     $doctors = [];
     $errors = [];
 
     if($_SERVER['REQUEST_METHOD'] === 'GET')
         $doctors = GetAllDoctors();
     
-    if($_SERVER['REQUEST_METHOD'] === 'POST') {
+    if($_SERVER['REQUEST_METHOD'] === 'POST') { 
         if($_POST['speciality'] == "None"){
             $doctors = GetAllDoctors();
         }
@@ -39,6 +39,7 @@
             <ul>
                 <li><a href="schedule.php" class="nav-link">Schedule Appointment</a></li>
                 <li><a href="MyAppointments.php" class="nav-link active">My Appointments</a></li>
+                <li><a href="../Sign/logout.php" class="nav-link">Logout</a></li>
             </ul>
         </nav>
     </div>
@@ -121,7 +122,9 @@
                 
                 <div class="form-group">
                     <label for="appointmentDate">Select Preferred Date:</label>
-                    <input type="date" id="appointmentDate" name="appointmentDate" required value="<?php echo isset($_POST['appointmentDate']) ? $_POST['appointmentDate'] : ''; ?>">
+                    <input type="date" id="appointmentDate" name="appointmentDate" required 
+                           value="<?php echo isset($_POST['appointmentDate']) ? $_POST['appointmentDate'] : ''; ?>" 
+                           min="<?php echo date('Y-m-d'); ?>">
                 </div>
                 <div class="button-group">
                     <button type="submit" name="schedule_appointment" class="btn-submit">Schedule Appointment</button>

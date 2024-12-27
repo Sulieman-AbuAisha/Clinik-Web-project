@@ -46,7 +46,7 @@ $doctors = getDoctors($pdo, $searchQuery, $search);
         <div class="logo">Admin Panel</div>
         <ul>
             <li><a href="../index.php">Home</a></li>
-            <li><a href="logout.php">Logout</a></li>
+            <li><a href="../Sign/logout.php">Logout</a></li>
         </ul>
     </nav>
 

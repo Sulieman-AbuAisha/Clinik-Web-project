@@ -10,7 +10,7 @@
             $stmt->execute();
             $spatiality = $stmt->fetchAll(PDO::FETCH_ASSOC);
 
-            return $spatiality;
+            return $spatiality; 
         }
         catch(PDOException $e) {
             error_log("Database Error: " . $e->getMessage());
@@ -81,7 +81,7 @@
     function insertAppointment($data){
         try{
             global $pdo;
-            $sql = "INSERT INTO resv_info (u_no, d_no, Date, Type) VALUES (:u_no, :d_no, :Date, 'confirm')";
+            $sql = "INSERT INTO resv_info (u_no, d_no, Date, Type) VALUES (:u_no, :d_no, :Date, 'Pending')";
             $stmt = $pdo->prepare($sql);
             $stmt->bindParam(':u_no', $_SESSION['user']['u_No']);
             $stmt->bindParam(':d_no', $data['doctor_select']);
@@ -92,7 +92,7 @@
         catch(PDOException $e){
             error_log("Database Error: " . $e->getMessage());
             $_SESSION["schedule_appointment"] = "Error: " . $e->getMessage();
-            var_dump($_SESSION);
+            
             return false;
         }
     }

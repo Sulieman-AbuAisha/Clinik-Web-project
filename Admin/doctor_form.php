@@ -12,10 +12,13 @@
         
         <form method="POST" action="doctor_actions.php">
             <input type="hidden" name="action" value="<?php echo isset($doctor) ? 'edit' : 'add'; ?>">
-            <?php if(isset($doctor)): ?>
+            <?php if(isset($doctor)){ ?>
                 <input type="hidden" name="doc_id" value="<?php echo $doctor['doc_no']; ?>">
                 <input type="hidden" name="update" value="1">
-            <?php endif; ?>
+            <?php }
+            else { ?>
+                <input type="hidden" name="add" value="1">
+            <?php } ?>
 
             <div class="form-group">
                 <label for="name">Full Name:</label>
@@ -58,27 +61,29 @@
 
             <div class="form-group">
                 <label>Working Days:</label><br>
-                <?php
-                $days = ['Sunday', 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday'];
-                $selected_days = isset($doctor['day_work']) ? explode(',', $doctor['day_work']) : [];
-                
-                foreach ($days as $day) {
-                    $checked = in_array($day, $selected_days) ? 'checked' : '';
-                    echo "<label class='checkbox-inline'>
-                            <input type='checkbox' name='working_days[]' value='$day' $checked> $day
-                          </label>";
-                }
-                ?>
+                <div class="working-days-container">
+                    <?php
+                    $days = ['Sunday', 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday'];
+                    $selected_days = isset($doctor['day_work']) ? explode(',', $doctor['day_work']) : [];
+                    
+                    foreach ($days as $day) {
+                        $checked = in_array($day, $selected_days) ? 'checked' : '';
+                        echo "<label class='checkbox-inline'>
+                                <input type='checkbox' name='working_days[]' value='$day' $checked > $day
+                              </label>";
+                    }
+                    ?>
+                </div>
             </div>
 
             <div class="form-group">
-                <button type="submit" class="btn btn-primary">
+                <button type="submit" class="btn btn-primary" id="submitBtn">
                     <?php echo isset($doctor) ? 'Update Doctor' : 'Add Doctor'; ?>
                 </button>
                 <a href="admin.php" class="btn btn-secondary">Cancel</a>
             </div>
         </form>
     </div>
-
+    <script src="js/doctor-validation.js"></script>
 </body>
 </html> 

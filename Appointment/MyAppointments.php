@@ -6,7 +6,7 @@ require_once('./PDO_Appointment.php');
 if ($_SESSION['user']===false) {
     header('Location: ../Sign/Sign.php');
     exit();
-}
+} 
 
 $user_id = $_SESSION['user']['u_No'];
 $appointments = getPatientAppointments($user_id);

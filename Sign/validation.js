@@ -4,11 +4,11 @@ const Pat_email = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
 const Pat_tel = /^[0][0-9]{9}$/;
 const Pat_password = /^(?=.*[A-Z])(?=.*[a-z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{8,}$/;
 const Pat_nationality = /^[A-Z][a-zA-Z]{2,}$/;
-const Pat_age = /^(?:1[0-9]|[2-9][0-9])$/;
+const Pat_age = /^(?:1[0-9]|[2-9][0-9])$/; 
 const Pat_address = /^[A-Za-z0-9\s,.-]{10,100}$/;
 
 function validate() {
-    let isfound = true;
+    let isfound = true; 
 
     if (!Pat_username.test(document.getElementsByName("username")[0].value)) {
         document.getElementById("username_error").innerHTML = "Username must start with capital letter and be 8 characters long";

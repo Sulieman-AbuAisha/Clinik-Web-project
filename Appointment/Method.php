@@ -10,7 +10,7 @@
         if(isDoctorFreeinDate($data['doctor_select'], $data['appointmentDate'])){
             if(insertAppointment($data)){
                 $errors['schedule_appointment_success'] = "Appointment scheduled successfully";
-                return true;
+                return true; 
             }
             else{
                 $errors['schedule_appointment'] = "Failed to schedule appointment";

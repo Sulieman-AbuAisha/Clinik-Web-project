@@ -9,7 +9,7 @@ document.addEventListener('DOMContentLoaded', function() {
     });
 
     function validateForm() {
-        let isValid = true;
+        let isValid = true; 
         
         // Validate Name
         const name = document.getElementById('name');
@@ -67,15 +67,17 @@ document.addEventListener('DOMContentLoaded', function() {
 
         // Validate Working Days
         const workingDays = document.querySelectorAll('input[name="working_days[]"]:checked');
+        const workingDaysContainer = document.querySelector('.working-days-container');
         if (workingDays.length === 0) {
-            showError(workingDays[0]?.parentElement, 'Please select at least one working day');
+            showError(workingDaysContainer, 'Please select at least one working day');
             isValid = false;
         } else {
-            removeError(workingDays[0].parentElement);
+            removeError(workingDaysContainer);
         }
 
         return isValid;
     }
+
 
     function showError(element, message) {
         // Remove existing error if any

@@ -1,6 +1,6 @@
 <?php
 require_once 'PDO_Sing.php';
-    function validateSignup($data, &$Error)   {
+    function validateSignup($data, &$Error)   { 
         if(!preg_match("/^[A-Z][a-zA-Z]{4}$/", $data["username"])) 
         {
             $Error['username'] = "Username must start with capital letter and be 5 characters long";
@@ -9,7 +9,7 @@ require_once 'PDO_Sing.php';
         if(!preg_match("/^[a-zA-Z]+\s[a-zA-Z]+$/", $data["name"]))
         {
             $Error['name'] = "Full name must contain first and last name";
-        }
+        } 
 
         // Add gender validation
         if(empty($data["gender"]))

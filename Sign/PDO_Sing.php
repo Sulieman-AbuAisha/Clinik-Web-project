@@ -1,9 +1,9 @@
 <?php
-    require_once '../PDO/PDO.PHP'; 
+    require_once '../PDO/PDO.PHP';  
 
 function Login($username, $password, $priv) {
     global $pdo;
-    try{
+    try{ 
         $sql = "select * from users where u_name = :username and password = :password and priv = :priv";
         $stmt = $pdo->prepare($sql);
 
